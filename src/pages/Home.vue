@@ -1,0 +1,216 @@
+<template>
+  <div class="home">
+    <section class="chanel_head">
+      <section class="chanel_head-con">
+        <section class="flex">
+          <a href="#">
+            <i class="el-icon-bell"></i>
+          </a>
+          <div id="search">
+            <i class="el-icon-search"></i>
+            <div class="chanel_head-sinput">搜索你想要的</div>
+          </div>
+        </section>
+        <section class="master_tab">
+          <section class="panel-header">
+            <div id="menu-swiper">
+              <div class="swiper-wrapper">
+                <div class="startab-moving">
+                  <div class="line"></div>
+                  <div class="dot"></div>
+                </div>
+                <div class="swiper-slider">推荐</div>
+                <div class="swiper-slider">偶像志</div>
+                <div class="swiper-slider">专题</div>
+                <div class="swiper-slider">新闻社</div>
+                <div class="swiper-slider">O!Love</div>
+                <div class="swiper-slider">活动社</div>
+                <div class="swiper-slider">星生活</div>
+                <div class="swiper-slider">音乐</div>
+                <div class="swiper-slider">爱豆直播间</div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </section>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Home",
+  components: {},
+  data() {
+    return {
+      lists: null
+    };
+  },
+  mounted() {},
+  methods: {}
+};
+</script>
+
+<style lang="" scoped>
+.chanel_head {
+  background-color: #fff;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid black;
+  height: 15%;
+}
+.chanel_head-con {
+  background-color: #fff;
+  position: fixed;
+  width: 100%;
+  height: 15%;
+  z-index: 999;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+.flex {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+.flex a {
+  outline: none;
+  text-decoration: none;
+  color: #858585;
+  margin: 0;
+  padding: 0;
+}
+.flex a i {
+  font-size: 20px;
+  margin-top: 15px;
+  margin-left: 15px;
+  position: relative;
+}
+#search {
+  height: 28px;
+  margin: 10px 15px 0;
+  border-radius: 20px;
+  background-color: #f1f1f2;
+  position: relative;
+  z-index: 1001;
+  display: flex;
+  width: 80%;
+}
+#search i {
+  display: inline-block;
+  width: 18px;
+  margin: 5px 5px 0;
+  /* float: inherit; */
+  height: 20px;
+  color: #8e8e93;
+  vertical-align: middle;
+}
+.chanel_head-sinput {
+  font-size: 14px;
+  margin-top: 5px;
+  line-height: 20px;
+  color: #8e8e93;
+  height: 20px;
+}
+
+.master_tab {
+  position: absolute;
+  bottom: -5px;
+  height: 60px;
+  overflow: hidden;
+  width: 100%;
+  z-index: 999;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+.panel-header {
+  height: 100%;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+#menu-swiper {
+  height: 100%;
+  z-index: 2;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  list-style: none;
+  padding: 0;
+}
+.swiper-wrapper {
+  /* transform: translate3d(0px, 0px, 0px); */
+  height: 100%;
+  transition-timing-function: ease-out;
+  margin: 0 auto;
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  box-sizing: content-box;
+  padding: 0;
+}
+.startab-moving {
+  left: 31px;
+  position: absolute;
+  width: 80%;
+  transition: all 0.4s;
+  bottom: -3px;
+  height: 9px;
+  z-index: 101;
+  margin: 0;
+  padding: 0;
+}
+.line {
+  height: 1px;
+  width: 36%;
+  position: absolute;
+  left: -1.45rem;
+  overflow: hidden;
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 51, 102, 0.2),
+    #ff4773 23%,
+    #ff4773 51%,
+    #ff4773 77%,
+    rgba(255, 51, 102, 0.2)
+  );
+  margin: 0;
+  padding: 0;
+}
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 9px;
+  box-sizing: border-box;
+  border: 1px #ff4773 solid;
+  background-color: #fff;
+  position: absolute;
+  bottom: 4px;
+  left: -5px;
+  margin: 0;
+  padding: 0;
+}
+.swiper-slider {
+  padding-left: 16px;
+  height: 55px;
+  line-height: 55px;
+  color: #ff4773;
+  font-weight: 600;
+  width: auto;
+  text-align: center;
+  float: left;
+  padding-right: 12.5px;
+  display: inline-block;
+  font-size: 16px;
+  position: relative;
+  /* letter-spacing: 50px; */
+  -webkit-border-radius: 0;
+  background: none;
+  margin: 0;
+  flex-shrink: 0;
+}
+</style>
