@@ -34,13 +34,31 @@
         </section>
       </section>
     </section>
+
+    <section id="mainindex">
+      <section class="index-0_1">
+        <div class="cover_img">
+          <img class="image" src="https://qimage.owhat.cn/prod/recommendmodule/notice/image/1562745904407.jpg" alt="">
+        </div>
+        <Week ref="week"></Week>
+        <Imageinfo ref='imageinfo'></Imageinfo> 
+        <Module ref="module"></Module>   
+      </section>
+    </section>
   </div>
 </template>
 
 <script>
+import Week from '../components/Week'
+import Imageinfo from '../components/Imageinfo'
+import Module from '../components/Module'
 export default {
   name: "Home",
-  components: {},
+  components: {
+    Week,
+    Imageinfo,
+    Module
+  },
   data() {
     return {
       lists: null
@@ -58,7 +76,7 @@ export default {
   margin: 0;
   padding: 0;
   border-bottom: 1px solid black;
-  height: 15%;
+  height: 100px;
 }
 .chanel_head-con {
   background-color: #fff;
@@ -205,12 +223,32 @@ export default {
   float: left;
   padding-right: 12.5px;
   display: inline-block;
-  font-size: 16px;
+  font-size: 15px;
   position: relative;
   /* letter-spacing: 50px; */
   -webkit-border-radius: 0;
   background: none;
   margin: 0;
   flex-shrink: 0;
+}
+#mainindex{
+  background-color: #f1f1f2;
+  display: block;
+  margin: 0 0 54px 0;
+padding: 0;
+}
+.index-0_1{
+  display: block;
+  margin: 0;
+padding: 0;
+}
+.cover_img{
+   margin: 0;
+padding: 0;
+}
+.image{
+  width: 100%;
+vertical-align: top;
+display: block;
 }
 </style>
