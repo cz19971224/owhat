@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view></router-view>
-    <section id="pubfoot">
+    <section id="pubfoot" v-if='isShow'>
       <section class="pub_foot">
         <div class="pub_foot_btn">
           <router-link to="/home">
@@ -33,7 +33,32 @@
 import {Icon} from 'element'
 export default {
   name: "App",
-  components: {}
+  data(){
+    return{
+      isShow:true
+    }
+  },
+  components: {},
+  watch: {
+    $route:function(newValue,oldValue){
+      console.log(newValue)
+      // console.log(oldValue)
+      const path=newValue.path
+      if(path!='/login'&&path!='/register'){
+        this.isShow=true
+      }else{
+        this.isShow=false
+      }
+    }
+  },
+  mounted() {
+     const path=this.$route.path
+      if(path!='/login'&&path!='/register'){
+        this.isShow=true
+      }else{
+        this.isShow=false
+      }
+  },
 };
 </script>
 

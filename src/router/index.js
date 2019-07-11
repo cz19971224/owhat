@@ -6,13 +6,15 @@ import Shop from '../pages/Shop'
 import Attention from '../pages/Attention'
 import My from '../pages/My'
 import Amway from '../pages/Amway'
+import Login from '../pages/Login'
+import Register from '../pages/Register'
 Vue.use(VueRouter)
 
 export default new VueRouter({
     routes:[
         {
             path:"/",
-            redirect:"/attention"
+            redirect:"/login"
         },
         {
             path:"/home",
@@ -33,6 +35,14 @@ export default new VueRouter({
         {
             path:"/amway",
             component:Amway
-        }
+        },
+        {
+            path:'/login',
+            component:Login
+        },
+        {
+            path:'/register',
+            component:Register
+        },
     ]
 })

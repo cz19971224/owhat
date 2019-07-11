@@ -14,7 +14,7 @@
         </span>
         <div class="club_mess">
           <dir class="mt">
-            <a>登录/注册</a>
+            <router-link to="/login">登录/注册</router-link>
           </dir>
         </div>
         <span class="icon">
