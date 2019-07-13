@@ -38,7 +38,7 @@
     <section id="mainindex">
       <section class="index-0_1">
         <div class="cover_img">
-          <img class="image" src="https://qimage.owhat.cn/prod/recommendmodule/notice/image/1562745904407.jpg" alt="">
+          <img class="image" src="https://qimage.owhat.cn/prod/recommendmodule/notice/image/1562386163330.jpeg" alt="">
         </div>
         <Week ref="week"></Week>
         <Imageinfo ref='imageinfo'></Imageinfo> 
