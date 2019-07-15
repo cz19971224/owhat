@@ -31,7 +31,7 @@
             </div>
           </section>
           <section class="login_btn">
-            <a class="btn">
+            <a class="btn" v-on:click="isLogin">
               登录
               <img src="https://m.owhat.cn/src/images/login_arrow.png" alt />
             </a>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: "Login",
   components: {},
@@ -71,6 +72,20 @@ export default {
   methods: {
     goback() {
       this.$router.go(-1); //返回上一层
+    },
+    isLogin(){
+      const username=document.getElementById('mobile').value
+      const password=document.getElementById('password').value
+     axios.get(`/login?username=${username}&password=${password}`)
+            .then((res)=>{
+                console.log(res)
+                if(res.data.result==1){
+                   this.$router.push({ path:'/my'  })
+                }
+            })
+            .catch((error)=>{
+                console.log(error);
+            })
     }
   }
 };

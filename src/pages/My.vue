@@ -2,19 +2,32 @@
   <div class="my">
     <nav id="nav">
       <section>
-        <a class="right">
-          <i class="el-icon-setting"></i>
-        </a>
+        <router-link to='/exit' class="right">
+        <i class="el-icon-setting"></i>
+        </router-link>
       </section>
     </nav>
     <section class="mine_header">
-      <div class="mine_top">
+      <div class="mine_top" v-show="isLogin==''">
         <span class="img120">
           <img src="https://qimage.owhat.cn/mobile/resource/position_1.png" alt />
         </span>
         <div class="club_mess">
           <dir class="mt">
             <router-link to="/login">登录/注册</router-link>
+          </dir>
+        </div>
+        <span class="icon">
+          <i class="el-icon-arrow-right"></i>
+        </span>
+      </div>
+       <div class="mine_top" v-show="isLogin==true">
+        <span class="img120">
+          <img :src="usersrc" alt />
+        </span>
+        <div class="club_mess">
+          <dir class="mt">
+            <a>{{user.name}}</a>
           </dir>
         </div>
         <span class="icon">
@@ -96,11 +109,43 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "My",
   components: {},
   data() {
-    return {};
+    return {
+      isLogin: "",
+      username: "",
+      user:'',
+      usersrc:''
+    };
+  },
+  methods: {},
+  mounted() {
+    axios
+      .get(`/isLogin`)
+      .then(res => {
+        console.log(res);
+        this.username = res.data.username;
+        this.isLogin = res.data.isLogin;
+        console.log(this.username);
+        if(this.isLogin==true){
+        axios
+          .get(`/allusers?username=${this.username}`)
+          .then(res => {
+            console.log(res);
+            this.user=res.data.titles[0]
+            this.usersrc=res.data.titles[0].usersrc
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
 </script>

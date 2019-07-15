@@ -44,19 +44,19 @@ export default {
       console.log(newValue)
       // console.log(oldValue)
       const path=newValue.path
-      if(path!='/login'&&path!='/register'){
-        this.isShow=true
-      }else{
+      if(path!='/home'&&path!='/shop'&&path!='/my'&&path!='/attention'&&path!='/amway'){
         this.isShow=false
+      }else{
+        this.isShow=true
       }
     }
   },
   mounted() {
      const path=this.$route.path
-      if(path!='/login'&&path!='/register'){
-        this.isShow=true
-      }else{
+      if(path!='/home'&&path!='/shop'&&path!='/my'&&path!='/attention'&&path!='/amway'){
         this.isShow=false
+      }else{
+        this.isShow=true
       }
   },
 };
@@ -86,7 +86,9 @@ body {
   word-wrap: break-word;
   margin: 0;
   padding: 0;
+  background: #f8f8f8;
 }
+
 /* #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

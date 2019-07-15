@@ -10,7 +10,9 @@
             <p>O妹出品</p>
         </div>
         <div class="index_group_con">
+            <router-link to='/card'> 
             <img class="image" src="https://qimage.owhat.cn/prod/shop/cover/1562674943555.jpg?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480" alt="">
+            </router-link>
             <span class="brief_mask"></span>
             <div class="group_intro">
                 BlackACE电子刊7月10日11:00正式上线
