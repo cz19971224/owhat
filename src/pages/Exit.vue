@@ -9,7 +9,7 @@
       </section>
     </nav>
     <section class="container">
-      <button v-on:v-click='exit' id="exit">退出当前账号</button>
+      <button v-on:click='exit' id="exit">退出当前账号</button>
     </section>
   </div>
 </template>

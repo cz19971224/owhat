@@ -4,23 +4,14 @@
       <nav id="nav">
         <section id="navbar">
           <span class="star-focus">
-            <i class="el-icon-user"></i>
+            <i class="el-icon-user" @click="showhandle"></i>
           </span>
           <i class="el-icon-more"></i>
-          <!-- <div id="newHead">
-                <span class="newHead_img">
-                    <img src="" alt="">
-                </span>
-                <span class="title">金泰妍</span>
-          </div>-->
         </section>
       </nav>
       <section class="star-top">
         <div class="star-top-fixed">
-          <img
-            src="https://qimage.owhat.cn/prod/user/cover/1486504717738.png?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-            alt
-          />
+          <img :src="star.big" alt />
         </div>
       </section>
       <section id="star-con">
@@ -29,15 +20,12 @@
             <section class="box">
               <div class="star-image-wrap">
                 <div class="star-image">
-                  <img
-                    src="https://qimage.owhat.cn/uploads/core/star/pic/508/732da7fa55a16b22be9b5ea5f6f883763a24f60d?imageMogr2/auto-orient/thumbnail/!200x200r/gravity/Center/crop/200x200"
-                    alt
-                  />
+                  <img :src="star.small" alt />
                 </div>
               </div>
               <div class="star-mess-intro">
-                <h2>金泰妍</h2>
-                <p>粉丝 394W</p>
+                <h2>{{star.name}}</h2>
+                <p>粉丝 {{star.fans}}</p>
               </div>
             </section>
           </section>
@@ -64,20 +52,20 @@
           </section>
           <section id="work">
             <section class="anlist-con">
-              <div class="each_work">
+              <div class="each_work" v-for='c in comment'>
                 <div class="each_work_head">
                   <div class="master_info">
                     <span class="list_heading">
                       <img
-                        src="https://qimage.owhat.cn/prod/user/avatar/1515149853425199?imageMogr2/auto-orient/thumbnail/!200x200r/gravity/Center/crop/200x200"
+                        :src="c.namesrc"
                         alt
                       />
                     </span>
                     <div class="master_tit_con">
                       <h2 class="clearfix">
-                        <cite class="left">默写</cite>
+                        <cite class="left">{{c.name}}</cite>
                       </h2>
-                      <div class="master_date">2019 发布</div>
+                      <div class="master_date">{{c.time}} 发布</div>
                     </div>
                     <div class="list_mark_cons"></div>
                   </div>
@@ -93,30 +81,117 @@
                   <div class="coverimgdto">
                     <div class="each_coverimg">
                       <img
-                        src="https://qimage.owhat.cn/prod/master/image/9e583218-2ffb-382d-9c15-6fc554de30e415627593722880.null?imageMogr2/auto-orient/size-limit/100k!&imageView2/2/w/2000/h/2000"
+                       :src="c.img"
                         alt
                       />
                     </div>
                   </div>
                 </div>
                 <div class="master_work_info">
-                  <span class="ellips">瞅瞅</span>
+                  <span class="ellips">{{c.content}}</span>
                 </div>
+                <div class="comments_btn">
+                <p class="btn_mess">
+                  <a class="icon-mess">
+                    <i class="el-icon-chat-dot-round"></i>
+                  </a>
+                  <span class="child">
+                    <router-link :to="'/discuss/'+c.title">评论</router-link>
+                  </span>
+                </p>
+                <em class="border_r"></em>
+                <p class="btn_love">
+                  <span class="loveBtn">
+                    <a class="loveIcon">
+                      <i class="el-icon-thumb"></i>
+                    </a>
+                    <em>赞</em>
+                  </span>
+                </p>
               </div>
+              </div>
+
             </section>
           </section>
         </section>
       </section>
     </section>
+    <Starmodule @isshow="getisshow"  @id='getdata' v-show="isshow"></Starmodule>
   </div>
 </template>
 
 <script>
+import Starmodule from "./Starmodule";
+import axios from "axios";
 export default {
   name: "Star",
-  components: {},
+  components: {
+    Starmodule
+  },
   data() {
-    return {};
+    return {
+      isshow: false,
+      star: "",
+      comment:'',
+      // name:'',
+      index:1
+    };
+  },
+  methods: {
+    showhandle() {
+      this.isshow = true;
+    },
+    getisshow(data) {
+      console.log(data);
+      this.isshow = data;
+    },
+    getdata(data){
+      // this.name=data
+      this.index=data
+      // console.log(this.index)
+      axios
+      .get(`/star?id=${this.index}`)
+      .then(res => {
+        console.log(res);
+        this.star = res.data.titles[0];
+        // this.name=this.star.name
+        // console.log(this.star)
+        axios
+          .get(`/starcomment?name=${this.star.name}`)
+          .then(res => {
+            console.log(res);
+            this.comment = res.data.titles;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    }
+  },
+  mounted() {
+    axios
+      .get(`/star?id=${this.index}`)
+      .then(res => {
+        console.log(res);
+        this.star = res.data.titles[0];
+        // this.name=this.star.name
+        // console.log(this.star)
+        axios
+          .get(`/starcomment?name=${this.star.name}`)
+          .then(res => {
+            console.log(res);
+            this.comment = res.data.titles;
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
 </script>
@@ -406,7 +481,7 @@ export default {
   background-color: #f1f1f2;
   overflow: hidden;
   display: block;
-  margin: 0;
+  margin: 0 0 54px 0;
   padding: 0;
 }
 .each_work {
@@ -510,42 +585,131 @@ export default {
   border: none;
   /* width: 6.87rem; */
   margin: 0;
-padding: 0;
+  padding: 0;
 }
-.each_coverimg{
-    width: 114.5px;
-    height: 114.5px;
-    background-color: #fff;
-    padding-right: 1px;
-    padding-bottom: 1px;
-    box-sizing: border-box;
-    float: left;
-position: relative;
-overflow: hidden;
-margin: 0;
+.each_coverimg {
+  width: 114.5px;
+  height: 114.5px;
+  background-color: #fff;
+  padding-right: 1px;
+  padding-bottom: 1px;
+  box-sizing: border-box;
+  float: left;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
 }
-.each_coverimg>img{
-    width: 100%;
-height: 100%;
-position: relative;
-display: block;
-vertical-align: middle;
+.each_coverimg > img {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: block;
+  vertical-align: middle;
 }
-.master_work_info{
-    padding: 17px 20px 6px;
-    font-size:16px;
-/* line-height: 0.45rem; */
-color: rgba(0, 0, 0, 0.88);
-word-break: break-all;
-margin: 0;
+.master_work_info {
+  padding: 17px 20px 6px;
+  font-size: 16px;
+  /* line-height: 0.45rem; */
+  color: rgba(0, 0, 0, 0.88);
+  word-break: break-all;
+  margin: 0;
 }
-.ellips{
-margin-bottom: 16px;
-/* max-height: 1.35rem; */
-overflow: hidden;
-text-overflow: ellipsis;
--webkit-line-clamp: 3;
--webkit-box-orient: vertical;
-display: -webkit-box !important;
+.ellips {
+  margin-bottom: 16px;
+  /* max-height: 1.35rem; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  display: -webkit-box !important;
+}
+
+
+
+
+.comments_con {
+  padding: 0 15px 20px;
+  margin: 0;
+}
+.comments_btn {
+  display: -webkit-box;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  color: #8e8e93;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+.btn_mess {
+  -webkit-box-flex: 1;
+  width: 50%;
+  margin: 0;
+  padding: 0;
+}
+.icon-mess {
+  width: 16px;
+  height: 16px;
+  /* vertical-align: middle; */
+  margin: 0 9px;
+  display: inline-block;
+  color: #858585;
+  padding: 0;
+}
+.btn_love {
+  -webkit-box-flex: 1;
+  width: 50%;
+  margin: 0;
+  padding: 0;
+}
+.child {
+  line-height: 16px;
+  text-align: center;
+  color: #8e8e93;
+  font-size: 16px;
+}
+.border_r {
+  height: 16px;
+  border-right: 1px #cdced3 solid;
+  font-style: normal;
+}
+.loveIcon {
+  width: 16px;
+  height: 16px;
+  /* vertical-align: middle; */
+  margin: 0 9px;
+  display: inline-block;
+  color: #858585;
+  padding: 0;
+}
+#community_btn {
+  height: 48px;
+  line-height: 48px;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+.community_con {
+  display: -webkit-box;
+  background-color: #fff;
+  position: fixed;
+  width: 100%;
+  height: 49px;
+  left: 0;
+  bottom: 0;
+  border-top: 1px #cdced3 solid;
+  z-index: 998;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+#btn_love_con {
+  -webkit-box-flex: 1;
+  width: 50%;
+  margin: 0;
+  padding: 0;
+}
+.child > a {
+  color: #8e8e93;
 }
 </style>

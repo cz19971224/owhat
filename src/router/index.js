@@ -10,6 +10,7 @@ import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Card from '../components/Card'
 import Exit from '../pages/Exit'
+import Discuss from '../components/Discuss'
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -47,12 +48,16 @@ export default new VueRouter({
             component:Register
         },
         {
-            path:'/card',
+            path:'/card/:id',
             component:Card
         },
         {
             path:'/exit',
             component:Exit
+        },
+        {
+            path:'/discuss/:title',
+            component:Discuss
         }
     ]
 })

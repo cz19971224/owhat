@@ -14,32 +14,24 @@
       <section id="banner">
         <div class="banner_img">
           <div id="banner_img">
-            <img
-              class="image"
-              src="https://qimage.owhat.cn/prod/shop/cover/1562674943555.jpg?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-              alt
-            />
+            <img class="image" :src="module.src" alt />
           </div>
         </div>
       </section>
       <section class="pub_panel">
         <div class="pb">
-          <h2 class="com_title">BlackACE电子刊7月10日11:00正式上线</h2>
+          <h2 class="com_title">{{module.title}}</h2>
         </div>
         <div class="shop_club">
           <div class="club_url">
             <span class="club_img">
-              <img
-                id="publish_img"
-                src="https://qimage.owhat.cn/prod/user/avatar/c68e89c1-1b8c-3bf2-b5c4-eb0b2e1ae5fb1538298727234.jpeg?imageMogr2/auto-orient/thumbnail/!200x200r/gravity/Center/crop/200x200"
-                alt
-              />
+              <img id="publish_img" :src="module.prosrc" alt />
             </span>
             <div class="club_mess">
-              <h2 id="publish_tit">Owhat偶像志</h2>
+              <h2 id="publish_tit">{{module.pro}}</h2>
               <p class="clearfix">
-                <span>关注：2</span>
-                <span>粉丝：11222</span>
+                <span>关注：{{module.attention}}</span>
+                <span>粉丝：{{module.fans}}</span>
               </p>
             </div>
           </div>
@@ -50,7 +42,7 @@
       </section>
     </section>
     <section class="panel">
-      <section class="pfr">1</section>
+      <section class="pfr">{{module.content}}</section>
       <section class="discuss">
         <section class="comments_header">
           <p class="comment_type">
@@ -60,30 +52,32 @@
             <city>最热</city>
           </p>
         </section>
-        <section id="comment_count">
+        <section id="comment_count" v-show='isshow' v-for="(c,index) in comment" :key="index">
           <section id="comment_group">
             <section class="eachcomment">
               <div class="comments_title">
                 <span class="img">
                   <img
                     class="image"
-                    src="https://img.owhat.cn/uploads/user/avatar/92864/medium_449652c2534660e9033cfe6d485de8eb3c66d760_6ef6b0f8jw8ejcmbgwuvgj204g04gq2q.jpg?imageMogr2/auto-orient/thumbnail/!200x200r/gravity/Center/crop/200x200"
+                    :src=c.namesrc
                     alt
                   />
                 </span>
                 <div class="mess">
-                  <h2>么么的人鱼</h2>
-                  <p class="clearfix">2019</p>
+                  <h2>{{c.name}}</h2>
+                  <p class="clearfix">{{c.time}}</p>
                 </div>
-                <span class="floor">1楼</span>
+                <span class="floor">{{comment.length-index}}楼</span>
               </div>
-              <div class="comments_con">加油</div>
+              <div class="comments_con">{{c.content}}</div>
               <div class="comments_btn">
                 <p class="btn_mess">
                   <a class="icon-mess">
                     <i class="el-icon-chat-dot-round"></i>
                   </a>
-                  <span class="child">评论</span>
+                  <span class="child">
+                    <router-link :to="'/discuss/'+module.title">评论</router-link>
+                  </span>
                 </p>
                 <em class="border_r"></em>
                 <p class="btn_love">
@@ -95,10 +89,14 @@
                   </span>
                 </p>
               </div>
+              
             </section>
           </section>
         </section>
       </section>
+    </section>
+    <section id="comment_count" v-show='!isshow'>
+      没有评论
     </section>
     <aside id="community_btn">
       <div class="community_con">
@@ -106,7 +104,9 @@
           <a class="icon-mess">
             <i class="el-icon-chat-dot-round"></i>
           </a>
-          <em>评论</em>
+          <em>
+            <router-link :to="'/discuss/'+module.title">评论</router-link>
+          </em>
         </div>
         <em class="border_r"></em>
         <div id="btn_love_con">
@@ -123,16 +123,46 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Card",
   components: {},
   data() {
-    return {};
+    return {
+      module: "",
+      comment:'',
+      isshow:true,
+    };
   },
   methods: {
     goback() {
       this.$router.go(-1); //返回上一层
     }
+  },
+  mounted() {
+    console.log(this.$route.params.id);
+    axios
+      .get(`/module?id=${this.$route.params.id}`)
+      .then(res => {
+        console.log(res);
+        this.module = res.data.titles[0];
+        axios
+          .get(`/cardcomment?title=${this.module.title}`)
+          .then(res => {
+            console.log(res);
+            if(res.data.titles==''){
+              this.isshow=false
+            }else{
+            this.comment = res.data.titles;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 };
 </script>
@@ -142,7 +172,7 @@ export default {
     background: #f8f8f8;
 } */
 .card {
-    background: #f8f8f8;
+  background: #f8f8f8;
   margin: 0;
   padding: 0;
 }
@@ -215,287 +245,294 @@ export default {
   margin: 0;
   padding: 0;
 }
-.banner_img{
-    margin: 0;
-padding: 0;
+.banner_img {
+  margin: 0;
+  padding: 0;
 }
-#banner_img{
-    margin: 0;
-padding: 0;
+#banner_img {
+  margin: 0;
+  padding: 0;
 }
-.image{
-    width: 100%;
-vertical-align: top;
-display: block;
+.image {
+  width: 100%;
+  vertical-align: top;
+  display: block;
 }
-.pub_panel{
-    background: #fff;
-    padding: 16px 15px 0;
-    display: block;
+.pub_panel {
+  background: #fff;
+  padding: 16px 15px 0;
+  display: block;
   margin: 0;
 }
-.pb{
-    display: -webkit-box;
-border-bottom: 1px #CDCED3 solid;
-padding: 0 0 24px 0;
-margin: 0;
+.pb {
+  display: -webkit-box;
+  border-bottom: 1px #cdced3 solid;
+  padding: 0 0 24px 0;
+  margin: 0;
 }
-.com_title{
-    -webkit-box-flex: 1;
-    font-weight: normal;
-    font-size: 16px;
-    margin: 0;
-padding: 0;
+.com_title {
+  -webkit-box-flex: 1;
+  font-weight: normal;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
 }
-.shop_club{
-    padding: 16px 0;
-    display: -webkit-box;
-border-bottom: 1px #CDCED3 solid;
-    margin: 0;
+.shop_club {
+  padding: 16px 0;
+  display: -webkit-box;
+  border-bottom: 1px #cdced3 solid;
+  margin: 0;
 }
-.club_url{
-    display: -webkit-box;
-    -webkit-box-flex: 1;
-    margin: 0;
-padding: 0;
+.club_url {
+  display: -webkit-box;
+  -webkit-box-flex: 1;
+  margin: 0;
+  padding: 0;
 }
-.club_img{
-    width: 44px;
-height: 44px;
-display: inline-block;
-position: relative;
+.club_img {
+  width: 44px;
+  height: 44px;
+  display: inline-block;
+  position: relative;
 }
-#publish_img{
-    border-radius: 50%;
-    width: 100%;
-vertical-align: top;
-display: block;
+#publish_img {
+  border-radius: 50%;
+  width: 100%;
+  vertical-align: top;
+  display: block;
 }
-.club_mess{
-    margin: 0 16px;
-    -webkit-box-flex: 1;
-    padding: 0;
+.club_mess {
+  margin: 0 16px;
+  -webkit-box-flex: 1;
+  padding: 0;
 }
-#publish_tit{
-    font-size: 16px;
-    line-height: 22px;
-    font-weight: normal;
-    margin: 0;
-padding: 0;
+#publish_tit {
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
 }
-.clearfix{
-    font-size: 14px;
-    line-height: 18px;
-    margin: 6px 0 0 0;
-    color: #8E8E93;
-    padding: 0;
+.clearfix {
+  font-size: 14px;
+  line-height: 18px;
+  margin: 6px 0 0 0;
+  color: #8e8e93;
+  padding: 0;
 }
-.clearfix>span{
-    margin: 0 24px 0 0;
-    display: inline-block;
+.clearfix > span {
+  margin: 0 24px 0 0;
+  display: inline-block;
 }
-em{
-    font-style: normal;
+
+em > a {
+  color: #2d2d31 !important;
 }
-.club_btn{
-    margin: 8px 0 0 0;
-    width: 72px;
-    -webkit-box-flex: 1;
-    display: inline-block;
+em {
+  font-style: normal;
 }
-#likehe{
-    outline: none;
-text-decoration: none;
-background: #FF4773;
-border: 1px #FF4773 solid;
-color: #fff;
-width: 72px;
-height: 28px;
--webkit-border-radius: 20px;
-font-size: 16px;
-line-height: 26px;
-text-align: center;
-display: inline-block;
-margin: 0;
-padding: 0;
+.club_btn {
+  margin: 8px 0 0 0;
+  width: 72px;
+  -webkit-box-flex: 1;
+  display: inline-block;
 }
-.panel{
-    display: block;
-    margin: 0;
-    padding: 0;
+#likehe {
+  outline: none;
+  text-decoration: none;
+  background: #ff4773;
+  border: 1px #ff4773 solid;
+  color: #fff;
+  width: 72px;
+  height: 28px;
+  -webkit-border-radius: 20px;
+  font-size: 16px;
+  line-height: 26px;
+  text-align: center;
+  display: inline-block;
+  margin: 0;
+  padding: 0;
 }
-.pfr{
-    padding: 0 15px;
-    background: #fff;
-    display: block;
-    margin: 0;
+.panel {
+  display: block;
+  margin: 0;
+  padding: 0;
 }
-.discuss{
-    margin: 12px 0 0 0;
-    display: block;
-    padding: 0;
+.pfr {
+  padding: 0 15px;
+  background: #fff;
+  display: block;
+  margin: 0;
 }
-.comments_header{
-    padding: 0 15px;
-    display: -webkit-box;
-    background: #fff;
-color: #2D2D31;
-height: 45px;
-font-weight: bold;
-line-height: 45px;
-position: relative;
-border-bottom: 1px #CDCED3 solid;
-margin: 0;
+.discuss {
+  margin: 12px 0 0 0;
+  display: block;
+  padding: 0;
 }
-.comment_type{
-    -webkit-box-flex: 1;
-text-align: center;
-color: rgba(0, 0, 0, 0.32);
-font-weight: normal;
-font-size: 16px;
-margin: 0;
-padding: 0;
+.comments_header {
+  padding: 0 15px;
+  display: -webkit-box;
+  background: #fff;
+  color: #2d2d31;
+  height: 45px;
+  font-weight: bold;
+  line-height: 45px;
+  position: relative;
+  border-bottom: 1px #cdced3 solid;
+  margin: 0;
 }
-.cur{
-    display: inline-block;
-line-height: 40px;
-color: #2D2D31;
-font-weight: bold;
+.comment_type {
+  -webkit-box-flex: 1;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.32);
+  font-weight: normal;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
 }
-city{
-    text-align: center;
-color: rgba(0, 0, 0, 0.32);
-font-weight: normal;
-font-size: 16px;
+.cur {
+  display: inline-block;
+  line-height: 40px;
+  color: #2d2d31;
+  font-weight: bold;
 }
-#comment_count{
-    display: block;
-    margin: 0;
-padding: 0;
+city {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.32);
+  font-weight: normal;
+  font-size: 16px;
 }
-#comment_group{
-     display: block;
-    margin: 0;
-padding: 0;
+#comment_count {
+  display: block;
+  margin: 0;
+  padding: 0;
 }
-.eachcomment{
-    border-bottom: 1px #CDCED3 solid;
-        background: #fff;
-         display: block;
-    margin: 0;
-padding: 0;
+#comment_group {
+  display: block;
+  margin: 0;
+  padding: 0;
 }
-.comments_title{
-    padding: 20px 15px;
-    display: -webkit-box;
-    margin: 0;
+.eachcomment {
+  border-bottom: 1px #cdced3 solid;
+  background: #fff;
+  display: block;
+  margin: 0;
+  padding: 0;
 }
-.img{
-   display: inline-block;
-width: 36px;
-height: 36px;
-background-color: #fff; 
+.comments_title {
+  padding: 20px 15px;
+  display: -webkit-box;
+  margin: 0;
 }
-.img>img{
-    border-radius: 50%;
+.img {
+  display: inline-block;
+  width: 36px;
+  height: 36px;
+  background-color: #fff;
 }
-.mess{
-    margin: 0 12px;
-    -webkit-box-flex: 1;
-    padding: 0;
+.img > img {
+  border-radius: 50%;
 }
-.mess>h2{
-    font-weight: normal;
-    font-size: 16px;
-    margin: 0;
-padding: 0;
+.mess {
+  margin: 0 12px;
+  -webkit-box-flex: 1;
+  padding: 0;
 }
-.floor{
-    margin: 12px 0 0 0;
-    display: inline-block;
-font-size: 16px;
-color: rgba(0, 0, 0, 0.24);
+.mess > h2 {
+  font-weight: normal;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
 }
-.comments_con{
-    padding: 0 15px 20px;
-    margin: 0;
+.floor {
+  margin: 12px 0 0 0;
+  display: inline-block;
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.24);
 }
-.comments_btn{
-    display: -webkit-box;
-height: 44px;
-line-height: 44px;
-text-align: center;
-color: #8E8E93;
-font-size: 16px;
-margin: 0;
-padding: 0;
+.comments_con {
+  padding: 0 15px 20px;
+  margin: 0;
 }
-.btn_mess{
-    -webkit-box-flex: 1;
-width: 50%;
-margin: 0;
-padding: 0;
+.comments_btn {
+  display: -webkit-box;
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  color: #8e8e93;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
 }
-.icon-mess{
-    width: 16px;
-height: 16px;
-/* vertical-align: middle; */
-margin: 0 9px;
-display: inline-block;
-color: #858585;
-padding: 0;
+.btn_mess {
+  -webkit-box-flex: 1;
+  width: 50%;
+  margin: 0;
+  padding: 0;
 }
-.btn_love{
-    -webkit-box-flex: 1;
-width: 50%;
-margin: 0;
-padding: 0;
+.icon-mess {
+  width: 16px;
+  height: 16px;
+  /* vertical-align: middle; */
+  margin: 0 9px;
+  display: inline-block;
+  color: #858585;
+  padding: 0;
 }
-.child{
-    line-height: 16px;
-text-align: center;
-    color: #8E8E93;
-    font-size: 16px;
+.btn_love {
+  -webkit-box-flex: 1;
+  width: 50%;
+  margin: 0;
+  padding: 0;
 }
-.border_r{
-    height: 16px;
-border-right: 1px #CDCED3 solid;
-font-style: normal;
+.child {
+  line-height: 16px;
+  text-align: center;
+  color: #8e8e93;
+  font-size: 16px;
 }
-.loveIcon{
-width: 16px;
-height: 16px;
-/* vertical-align: middle; */
-margin: 0 9px;
-display: inline-block;
-color: #858585;
-padding: 0;
+.border_r {
+  height: 16px;
+  border-right: 1px #cdced3 solid;
+  font-style: normal;
 }
-#community_btn{
-    height: 48px;
-line-height: 48px;
-display: block;
-margin: 0;
-padding: 0;
+.loveIcon {
+  width: 16px;
+  height: 16px;
+  /* vertical-align: middle; */
+  margin: 0 9px;
+  display: inline-block;
+  color: #858585;
+  padding: 0;
 }
-.community_con{
-    display: -webkit-box;
-background-color: #fff;
-position: fixed;
-width: 100%;
-height: 49px;
-left: 0;
-bottom: 0;
-border-top: 1px #CDCED3 solid;
-z-index: 998;
-text-align: center;
-margin: 0;
-padding: 0;
+#community_btn {
+  height: 48px;
+  line-height: 48px;
+  display: block;
+  margin: 0;
+  padding: 0;
 }
-#btn_love_con{
-    -webkit-box-flex: 1;
-width: 50%;
-margin: 0;
-padding: 0;
+.community_con {
+  display: -webkit-box;
+  background-color: #fff;
+  position: fixed;
+  width: 100%;
+  height: 49px;
+  left: 0;
+  bottom: 0;
+  border-top: 1px #cdced3 solid;
+  z-index: 998;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+#btn_love_con {
+  -webkit-box-flex: 1;
+  width: 50%;
+  margin: 0;
+  padding: 0;
+}
+.child > a {
+  color: #8e8e93;
 }
 </style>

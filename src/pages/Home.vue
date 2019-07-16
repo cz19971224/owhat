@@ -14,20 +14,18 @@
         <section class="master_tab">
           <section class="panel-header">
             <div id="menu-swiper">
-              <div class="swiper-wrapper">
-                <div class="startab-moving">
+              <div class="swiper-wrapper" :style="trans">
+                <!-- <div class="startab-moving" :style="left">
                   <div class="line"></div>
                   <div class="dot"></div>
-                </div>
-                <div class="swiper-slider">推荐</div>
-                <div class="swiper-slider">偶像志</div>
-                <div class="swiper-slider">专题</div>
-                <div class="swiper-slider">新闻社</div>
-                <div class="swiper-slider">O!Love</div>
-                <div class="swiper-slider">活动社</div>
-                <div class="swiper-slider">星生活</div>
-                <div class="swiper-slider">音乐</div>
-                <div class="swiper-slider">爱豆直播间</div>
+                </div> -->
+                <div
+                  v-for="(k,index) in kind"
+                  :key="index"
+                  :class="isshow==index?'active':''"
+                  @click="change(index)"
+                  class="swiper-slider"
+                >{{k}}</div>
               </div>
             </div>
           </section>
@@ -35,23 +33,27 @@
       </section>
     </section>
 
-    <section id="mainindex">
+    <section id="mainindex" v-show="isshow==0">
       <section class="index-0_1">
         <div class="cover_img">
-          <img class="image" src="https://qimage.owhat.cn/prod/recommendmodule/notice/image/1562386163330.jpeg" alt="">
+          <img
+            class="image"
+            src="https://qimage.owhat.cn/prod/recommendmodule/notice/image/1562386163330.jpeg"
+            alt
+          />
         </div>
         <Week ref="week"></Week>
-        <Imageinfo ref='imageinfo'></Imageinfo> 
-        <Module ref="module"></Module>   
+        <Imageinfo ref="imageinfo"></Imageinfo>
+        <Module ref="module"></Module>
       </section>
     </section>
   </div>
 </template>
 
 <script>
-import Week from '../components/Week'
-import Imageinfo from '../components/Imageinfo'
-import Module from '../components/Module'
+import Week from "../components/Week";
+import Imageinfo from "../components/Imageinfo";
+import Module from "../components/Module";
 export default {
   name: "Home",
   components: {
@@ -61,11 +63,46 @@ export default {
   },
   data() {
     return {
-      lists: null
+      kind: [
+        "推荐",
+        "偶像志",
+        "专题",
+        "新闻社",
+        "O!Love",
+        "活动社",
+        "星生活",
+        "音乐",
+        "爱豆直播间"
+      ],
+      isshow: 0,
+      trans: "",
+      left: "left:31px;"
     };
   },
   mounted() {},
-  methods: {}
+  methods: {
+    change(index) {
+      console.log(index);
+      this.isshow = index;
+      // if (index == 0) {
+      //   this.left = "left:31px;";
+      // }
+      // if (index == 8) {
+      //   this.left = "left:600px;";
+      // } else {
+      //   var lef = 90 * index;
+      //   this.left = `left:${lef}px;`;
+      // }
+      if (index >= 3 && index <= 6) {
+        var len = (index - 2) * 70;
+        this.trans = `transform:translateX(-${len}px);`;
+        // $(".change").css("transform", `translateX(-${len}px)`);
+      }
+      if (index < 3) {
+        this.trans = `transform:translateX(0px);`;
+      }
+    }
+  },
 };
 </script>
 
@@ -172,7 +209,7 @@ export default {
   padding: 0;
 }
 .startab-moving {
-  left: 31px;
+  /* left: 31px; */
   position: absolute;
   width: 80%;
   transition: all 0.4s;
@@ -216,7 +253,8 @@ export default {
   padding-left: 16px;
   height: 55px;
   line-height: 55px;
-  color: #ff4773;
+  color: #2d2d31;
+  /* color: #ff4773; */
   font-weight: 600;
   width: auto;
   text-align: center;
@@ -231,24 +269,27 @@ export default {
   margin: 0;
   flex-shrink: 0;
 }
-#mainindex{
+#mainindex {
   background-color: #f1f1f2;
   display: block;
   margin: 0 0 54px 0;
-padding: 0;
+  padding: 0;
 }
-.index-0_1{
+.index-0_1 {
   display: block;
   margin: 0;
-padding: 0;
+  padding: 0;
 }
-.cover_img{
-   margin: 0;
-padding: 0;
+.cover_img {
+  margin: 0;
+  padding: 0;
 }
-.image{
+.image {
   width: 100%;
-vertical-align: top;
-display: block;
+  vertical-align: top;
+  display: block;
+}
+.active {
+  color: #ff4773;
 }
 </style>

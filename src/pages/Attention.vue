@@ -28,16 +28,6 @@ export default {
         this.username = res.data.username;
         this.isLogin = res.data.isLogin;
         console.log(this.username);
-        // axios
-        //   .get(`/allusers?username=${this.username}`)
-        //   .then(res => {
-        //     console.log(res);
-        //     this.user=res.data.titles[0]
-        //     this.usersrc=res.data.titles[0].usersrc
-        //   })
-        //   .catch(error => {
-        //     console.log(error);
-        //   });
       })
       .catch(error => {
         console.log(error);

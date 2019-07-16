@@ -4,19 +4,23 @@ import Vue from 'vue'
 import App from './App'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-// import VueTouch from "vue-touch"
-import store from './store/index'
-// Vue.use(VueTouch,{name:"v-touch"});
+import VueTouch from "vue-touch"
+// import store from './store/index'
+Vue.use(VueTouch,{name:"v-touch"});
 Vue.use(ElementUI);
 // Vue.config.productionTip = false
 import router from './router/index'
+VueTouch.config.swipe = {
 
+  threshold: 100 //手指左右滑动距离
+
+}
 /* eslint-disable no-new */
 Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  store,
+  // store,
   // render: h => h(App),
   components: { App },
   template: '<App/>'

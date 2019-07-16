@@ -6,158 +6,45 @@
     </div>
     <div class="swiper-container">
       <div class="swiper-wrapper">
-        <div class="swiper-slide">
+        <div class="swiper-slide" v-for="w in week">
           <div class="each_list">
             <div class="relaImg">
               <img
                 class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
+                :src=w.src
                 alt
               />
             </div>
             <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
+              <h4 class="img_intro">{{w.title}}</h4>
             </div>
           </div>
         </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="each_list">
-            <div class="relaImg">
-              <img
-                class="image"
-                src="https://qimage.owhat.cn/prod/shop/cover/1562066303174.gif?imageMogr2/auto-orient/thumbnail/!750x480r/gravity/Center/quality/80/crop/750x480"
-                alt
-              />
-            </div>
-            <div>
-              <h4 class="img_intro">邓超元：烫金少年，把耀眼握在手里</h4>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Week",
   components: {},
   data() {
-    return {};
+    return {
+      week:''
+    };
+  },
+  mounted(){
+     axios
+          .get(`/week`)
+          .then(res => {
+            console.log(res);
+            this.week=res.data.titles
+          })
+          .catch(error => {
+            console.log(error);
+          });
   }
 };
 </script>
@@ -200,6 +87,7 @@ export default {
   height: 100%;
   z-index: 1;
   display: flex;
+  overflow: auto;
 }
 .swiper-slide {
   margin: 0 0 10px 0;
