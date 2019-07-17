@@ -11,6 +11,7 @@ import Register from '../pages/Register'
 import Card from '../components/Card'
 import Exit from '../pages/Exit'
 import Discuss from '../components/Discuss'
+import Source from '../components/Source'
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -58,6 +59,10 @@ export default new VueRouter({
         {
             path:'/discuss/:title',
             component:Discuss
+        },
+        {
+            path:'/source',
+            component:Source
         }
     ]
 })

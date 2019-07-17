@@ -6,21 +6,48 @@
           <a class="fa" v-on:click="goback">
             <i class="el-icon-arrow-left"></i>
           </a>
-          手机注册
+          注册
         </section>
       </nav>
       <section class="loginform">
         <section class="loginform_mid">
           <section class="loginNei">
-            <div class="each_ipt">
-              <input id="mobile" class="pub_input" type="text" name placeholder="请输入手机号" />
+            <div class="each_ipt" v-show="!isshow">
+              <input
+                id="mobile"
+                class="pub_input"
+                type="text"
+                v-model="value1"
+                name
+                placeholder="请输入帐号"
+              />
             </div>
-            <div class="each_ipt">
-              <input type="password" name id="password" class="pub_input" placeholder="请输入6-16位密码" />
+            <div class="each_ipt" v-show="!isshow">
+              <input
+                type="password"
+                v-model="value2"
+                name
+                id="password"
+                class="pub_input"
+                placeholder="请输入6-16位密码"
+              />
+            </div>
+            <div class="each_ipt" v-show="isshow">
+              <input
+                id="mobile"
+                class="pub_input"
+                type="text"
+                v-model="value3"
+                name
+                placeholder="请输入昵称"
+              />
             </div>
           </section>
-          <section class="login_btn">
-            <a class="btn">注册</a>
+          <section class="login_btn" v-show="!isshow">
+            <a class="btn" :class="value1!=''&&value2!==''?'red':''" @click="register">注册</a>
+          </section>
+          <section class="login_btn" v-show="isshow">
+            <a class="btn" :class="value3!=''?'red':''" @click="setname">注册昵称</a>
           </section>
         </section>
       </section>
@@ -29,15 +56,70 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Phoneregister",
   components: {},
   data() {
-    return {};
+    return {
+      value1: "",
+      value2: "",
+      value3: "",
+      isshow: false
+    };
   },
   methods: {
     goback() {
       this.$router.go(-1); //返回上一层
+    },
+    setname() {
+      axios
+        .get(`/updatename?userid=${this.value1}&name=${this.value3}`)
+        .then(res => {
+          console.log(res);
+          if(res.data.result==1){
+             this.$router.push({ path: "/my" });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    register() {
+      const username = document.getElementById("mobile").value;
+      const password = document.getElementById("password").value;
+      // console.log(this.value1)
+      if (this.value1 != "" && this.value2 != "") {
+        axios
+          .get(`/allusers?username=${username}`)
+          .then(res => {
+            console.log(res);
+            if (res.data.titles != "") {
+              this.$message({
+                message: "账号已存在",
+                type: "warning"
+              });
+            } else {
+              this.isshow = true;
+              axios
+                .get(`/register?username=${username}&password=${password}`)
+                .then(res => {
+                  console.log(res);
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      } else {
+        this.$message({
+          message: "账号或密码未填入",
+          type: "warning"
+        });
+      }
     }
   }
 };
@@ -149,5 +231,8 @@ export default {
   display: inline-block;
   margin: 0;
   padding: 0;
+}
+.red {
+  background: #546eff !important;
 }
 </style>

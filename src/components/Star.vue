@@ -52,14 +52,11 @@
           </section>
           <section id="work">
             <section class="anlist-con">
-              <div class="each_work" v-for='c in comment'>
+              <div class="each_work" v-for="c in comment">
                 <div class="each_work_head">
                   <div class="master_info">
                     <span class="list_heading">
-                      <img
-                        :src="c.namesrc"
-                        alt
-                      />
+                      <img :src="c.namesrc" alt />
                     </span>
                     <div class="master_tit_con">
                       <h2 class="clearfix">
@@ -77,13 +74,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="master_img">
+                <div class="master_img" v-show="c.img">
                   <div class="coverimgdto">
                     <div class="each_coverimg">
-                      <img
-                       :src="c.img"
-                        alt
-                      />
+                      <img :src="c.img" alt />
                     </div>
                   </div>
                 </div>
@@ -91,32 +85,31 @@
                   <span class="ellips">{{c.content}}</span>
                 </div>
                 <div class="comments_btn">
-                <p class="btn_mess">
-                  <a class="icon-mess">
-                    <i class="el-icon-chat-dot-round"></i>
-                  </a>
-                  <span class="child">
-                    <router-link :to="'/discuss/'+c.title">评论</router-link>
-                  </span>
-                </p>
-                <em class="border_r"></em>
-                <p class="btn_love">
-                  <span class="loveBtn">
-                    <a class="loveIcon">
-                      <i class="el-icon-thumb"></i>
+                  <p class="btn_mess">
+                    <a class="icon-mess">
+                      <i class="el-icon-chat-dot-round"></i>
                     </a>
-                    <em>赞</em>
-                  </span>
-                </p>
+                    <span class="child">
+                      <router-link :to="'/discuss/'+c.title">评论</router-link>
+                    </span>
+                  </p>
+                  <em class="border_r"></em>
+                  <p class="btn_love">
+                    <span class="loveBtn">
+                      <a class="loveIcon">
+                        <i class="el-icon-thumb"></i>
+                      </a>
+                      <em>赞</em>
+                    </span>
+                  </p>
+                </div>
               </div>
-              </div>
-
             </section>
           </section>
         </section>
       </section>
     </section>
-    <Starmodule @isshow="getisshow"  @id='getdata' v-show="isshow"></Starmodule>
+    <Starmodule @isshow="getisshow" @name="getdata" v-show="isshow"></Starmodule>
   </div>
 </template>
 
@@ -132,9 +125,11 @@ export default {
     return {
       isshow: false,
       star: "",
-      comment:'',
+      comment: "",
       // name:'',
-      index:1
+      index: 1,
+      name: "",
+      userid: ""
     };
   },
   methods: {
@@ -145,45 +140,70 @@ export default {
       console.log(data);
       this.isshow = data;
     },
-    getdata(data){
+    getdata(data) {
       // this.name=data
-      this.index=data
+      this.name = data;
       // console.log(this.index)
       axios
-      .get(`/star?id=${this.index}`)
-      .then(res => {
-        console.log(res);
-        this.star = res.data.titles[0];
-        // this.name=this.star.name
-        // console.log(this.star)
-        axios
-          .get(`/starcomment?name=${this.star.name}`)
-          .then(res => {
-            console.log(res);
-            this.comment = res.data.titles;
-          })
-          .catch(error => {
-            console.log(error);
-          });
-      })
-      .catch(error => {
-        console.log(error);
-      });
+        .get(`/star?name=${this.name}`)
+        .then(res => {
+          console.log(res);
+          this.star = res.data.titles[0];
+          // this.name=this.star.name
+          // console.log(this.star)
+          axios
+            .get(`/starcomment?name=${this.star.name}`)
+            .then(res => {
+              console.log(res);
+              this.comment = res.data.titles;
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   mounted() {
     axios
-      .get(`/star?id=${this.index}`)
+      .get(`/isLogin`)
       .then(res => {
         console.log(res);
-        this.star = res.data.titles[0];
-        // this.name=this.star.name
-        // console.log(this.star)
+        this.userid = res.data.username;
         axios
-          .get(`/starcomment?name=${this.star.name}`)
+          .get(`/lovestar?userid=${this.userid}`)
           .then(res => {
             console.log(res);
-            this.comment = res.data.titles;
+            // this.lovestar = res.data.titles;
+            if (res.data.titles == "") {
+              const showstar = false;
+              // console.log(showstar)
+              this.$emit("hidden", showstar);
+            }
+            if (res.data.titles != "") {
+              axios
+                .get(`/star?name=${res.data.titles[0].name}`)
+                .then(res => {
+                  console.log(res);
+                  this.star = res.data.titles[0];
+                  // this.name=this.star.name
+                  // console.log(this.star)
+                  axios
+                    .get(`/starcomment?name=${this.star.name}`)
+                    .then(res => {
+                      console.log(res);
+                      this.comment = res.data.titles;
+                    })
+                    .catch(error => {
+                      console.log(error);
+                    });
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            }
           })
           .catch(error => {
             console.log(error);
@@ -623,9 +643,6 @@ export default {
   -webkit-box-orient: vertical;
   display: -webkit-box !important;
 }
-
-
-
 
 .comments_con {
   padding: 0 15px 20px;

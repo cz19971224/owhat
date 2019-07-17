@@ -21,28 +21,40 @@
               <span class="login_name">
                 <img class="image" src="https://m.owhat.cn/src/images/login_name.png" alt />
               </span>
-              <input id="mobile" class="pub_input" type="text" placeholder="请输入手机号或邮箱" />
+              <input
+                id="mobile"
+                v-model="value1"
+                class="pub_input"
+                type="text"
+                placeholder="请输入账号"
+              />
             </div>
             <div class="each_ipt">
               <span class="login_name">
                 <img class="image" src="https://m.owhat.cn/src/images/login_password.png" alt />
               </span>
-              <input id="password" class="pub_input" type="password" placeholder="请输入密码" />
+              <input
+                id="password"
+                v-model="value2"
+                class="pub_input"
+                type="password"
+                placeholder="请输入密码"
+              />
             </div>
           </section>
           <section class="login_btn">
-            <a class="btn" v-on:click="isLogin">
+            <a class="btn" :class="value1!=''&&value2!==''?'red':''" v-on:click="isLogin">
               登录
               <img src="https://m.owhat.cn/src/images/login_arrow.png" alt />
             </a>
             <p>
-              <router-link id="register" to='/register'>立即注册</router-link>
+              <router-link id="register" to="/register">立即注册</router-link>
               <a class="forget">忘记密码</a>
             </p>
           </section>
         </section>
       </section>
-      <footer id="loginform_bot">
+      <!-- <footer id="loginform_bot">
         <div class="line"></div>
         <h2 class="foot_tit">第三方账号登录</h2>
         <div class="third_btn">
@@ -56,36 +68,45 @@
             <img src="https://m.owhat.cn/src/images/login_qq.png" alt />
           </a>
         </div>
-      </footer>
+      </footer>-->
     </section>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
+import axios from "axios";
 export default {
   name: "Login",
   components: {},
   data() {
-    return {};
+    return {
+      value1: "",
+      value2: ""
+    };
   },
   methods: {
     goback() {
       this.$router.go(-1); //返回上一层
     },
-    isLogin(){
-      const username=document.getElementById('mobile').value
-      const password=document.getElementById('password').value
-     axios.get(`/login?username=${username}&password=${password}`)
-            .then((res)=>{
-                console.log(res)
-                if(res.data.result==1){
-                   this.$router.push({ path:'/my'  })
-                }
-            })
-            .catch((error)=>{
-                console.log(error);
-            })
+    isLogin() {
+      const username = document.getElementById("mobile").value;
+      const password = document.getElementById("password").value;
+      axios
+        .get(`/login?username=${username}&password=${password}`)
+        .then(res => {
+          console.log(res);
+          if (res.data.result == 1) {
+            this.$router.push({ path: "/my" });
+          } else {
+            this.$message({
+              message: res.data.message,
+              type: "warning"
+            });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   }
 };
@@ -300,5 +321,8 @@ export default {
   display: block;
   margin: 0 auto;
   font-style: normal;
+}
+.red {
+  background: #546eff !important;
 }
 </style>

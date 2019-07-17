@@ -7,12 +7,9 @@
             <div class="userid_con">
               <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                  <div class="star_mess" v-for="s in star" @click="change(s.id)" :key='s.id'>
+                  <div class="star_mess" v-for="s in star2" @click="change(s.name)" :key="s.id">
                     <div class="star-image">
-                      <img
-                        :src="s.small"
-                        alt
-                      />
+                      <img :src="s.small" alt />
                     </div>
                     <cite>{{s.name}}</cite>
                   </div>
@@ -20,7 +17,7 @@
               </div>
             </div>
             <div class="focusmore_con">
-              <a class="focusmore">关注管理</a>
+              <router-link to="/source" class="focusmore">关注管理</router-link>
             </div>
             <div class="drop-close">
               <i class="el-icon-circle-close" @click="clickHandle"></i>
@@ -39,8 +36,10 @@ export default {
   components: {},
   data() {
     return {
-        isshow:false,
-        star:''
+      isshow: false,
+      star: "",
+      userid: "",
+      star2:[]
     };
   },
   methods: {
@@ -50,29 +49,40 @@ export default {
       // para2传递的数据
       this.$emit("isshow", this.isshow);
     },
-    change(e){
-        console.log(e)
-        this.$emit("isshow", this.isshow);
-        // this.$emit("name", e);
-        this.$emit("id", e);
+    change(e) {
+      console.log(e);
+      this.$emit("isshow", this.isshow);
+      // this.$emit("name", e);
+      this.$emit("name", e);
     }
   },
-  mounted(){
-      axios
-      .get(`/allstars`)
+  mounted() {
+    axios
+      .get(`/isLogin`)
       .then(res => {
         console.log(res);
-        this.star = res.data.titles;
-        // console.log(this.star)
-        // axios
-        //   .get(`/starcomment?name=${this.star.name}`)
-        //   .then(res => {
-        //     console.log(res);
-        //     this.comment = res.data.titles[0];
-        //   })
-        //   .catch(error => {
-        //     console.log(error);
-        //   });
+        this.userid = res.data.username;
+        axios
+          .get(`/lovestar?userid=${this.userid}`)
+          .then(res => {
+            console.log(res);
+            this.star = res.data.titles;
+            for(var i=0;i<this.star.length;i++){
+              axios
+                .get(`/star?name=${res.data.titles[i].name}`)
+                .then(res => {
+                  console.log(res);
+                  this.star2 = this.star2.concat(res.data.titles);
+                  // console.log(this.star2)
+                  })
+                .catch(error => {
+                  console.log(error);
+                });
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
       })
       .catch(error => {
         console.log(error);
