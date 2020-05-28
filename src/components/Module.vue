@@ -1,28 +1,22 @@
 <template>
   <div class="module">
-    <div v-for="h in homemodule" :key='h.id'>
-      <div class="index_group_tit">
-        <div class="group_profits">
-          <img
-            class="img"
-            :src=h.prosrc
-            alt
-          />
+    <div v-for="h in homemodule" :key="h.id">
+      <router-link :to="'/card/'+h.id">
+        <div class="index_group_tit">
+          <div class="group_profits">
+            <img class="img" :src="h.prosrc" alt />
+          </div>
+          <div class="group_tit">{{h.pro}}</div>
+          <p>{{h.type}}</p>
         </div>
-        <div class="group_tit">{{h.pro}}</div>
-        <p>{{h.type}}</p>
-      </div>
-      <div class="index_group_con">
-        <router-link :to="'/card/'+h.id">
-          <img
-            class="image"
-            :src=h.src
-            alt
-          />
-        </router-link>
-        <span class="brief_mask"></span>
-        <div class="group_intro">{{h.title}}</div>
-      </div>
+        <div class="index_group_con">
+          <!-- <router-link :to="'/card/'+h.id"> -->
+          <img class="image" :src="h.src" alt />
+          <!-- </router-link> -->
+          <span class="brief_mask"></span>
+          <div class="group_intro">{{h.title}}</div>
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -34,7 +28,7 @@ export default {
   components: {},
   data() {
     return {
-        homemodule:''
+      homemodule: ""
     };
   },
   mounted() {
@@ -42,7 +36,7 @@ export default {
       .get(`/allmodules`)
       .then(res => {
         console.log(res);
-        this.homemodule=res.data.titles
+        this.homemodule = res.data.titles;
       })
       .catch(error => {
         console.log(error);

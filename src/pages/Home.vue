@@ -8,7 +8,7 @@
           </a>
           <div id="search">
             <i class="el-icon-search"></i>
-            <div class="chanel_head-sinput">搜索你想要的</div>
+            <router-link to="/source"><div class="chanel_head-sinput">搜索你想要的</div></router-link>
           </div>
         </section>
         <section class="master_tab">

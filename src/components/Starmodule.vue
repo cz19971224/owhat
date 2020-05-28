@@ -39,7 +39,8 @@ export default {
       isshow: false,
       star: "",
       userid: "",
-      star2:[]
+      star2:[],
+      isshop:1
     };
   },
   methods: {
@@ -54,6 +55,8 @@ export default {
       this.$emit("isshow", this.isshow);
       // this.$emit("name", e);
       this.$emit("name", e);
+      // this.$router.go(0)
+      this.$emit("shopid", this.isshop);
     }
   },
   mounted() {

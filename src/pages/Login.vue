@@ -96,7 +96,8 @@ export default {
         .then(res => {
           console.log(res);
           if (res.data.result == 1) {
-            this.$router.push({ path: "/my" });
+            // this.$router.push({ path: "/my" });
+            this.$router.go(-1);
           } else {
             this.$message({
               message: res.data.message,

@@ -78,7 +78,7 @@ export default {
         .then(res => {
           console.log(res);
           if(res.data.result==1){
-             this.$router.push({ path: "/my" });
+             this.$router.push({ path: "/login" });
           }
         })
         .catch(error => {

@@ -14,30 +14,31 @@
       <section id="banner">
         <div class="banner_img">
           <div id="banner_img">
-            <img class="image" :src="module.src" alt />
+            <img class="image" :src="module.shopimg" alt />
           </div>
         </div>
       </section>
       <section class="pub_panel">
         <div class="pb">
-          <h2 class="com_title">{{module.title}}</h2>
+          <h2 class="com_title">{{module.name}}</h2>
         </div>
         <div class="shop_club">
           <div class="club_url">
             <span class="club_img">
-              <img id="publish_img" :src="module.prosrc" alt />
+              <img id="publish_img" :src="module.userimg" alt />
             </span>
             <div class="club_mess">
-              <h2 id="publish_tit">{{module.pro}}</h2>
+              <h2 id="publish_tit">{{module.shopuser}}</h2>
               <p class="clearfix">
-                <span>关注：{{module.attention}}</span>
-                <span>粉丝：{{module.fans}}</span>
+                <span>￥{{module.price}}</span>
+                <!-- <span>关注：{{module.attention}}</span>
+                <span>粉丝：{{module.fans}}</span>-->
               </p>
             </div>
           </div>
-          <span class="club_btn">
+          <!-- <span class="club_btn">
             <a id="likehe">关注</a>
-          </span>
+          </span>-->
         </div>
       </section>
     </section>
@@ -46,22 +47,33 @@
       <section class="discuss">
         <section class="comments_header">
           <p class="comment_type">
+            <city class="cur">详情</city>
+          </p>
+        </section>
+        <section class="panel" id="comment_count">
+          <div id="shopdetail">
+            <div
+              style="padding:0 0 0.48rem;font-size: 0.3rem;line-height: 0.45rem;text-align: justify;"
+            >
+              <p class="comment_dec">{{module.dec}}</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="comments_header">
+          <p class="comment_type">
             <city class="cur">最新</city>
           </p>
           <!-- <p class="comment_type">
             <city>最热</city>
-          </p> -->
+          </p>-->
         </section>
-        <section id="comment_count" v-show='isshow' v-for="(c,index) in comment" :key="index">
+        <section id="comment_count" v-show="isshow" v-for="(c,index) in comment" :key="index">
           <section id="comment_group">
             <section class="eachcomment">
               <div class="comments_title">
                 <span class="img">
-                  <img
-                    class="image"
-                    :src=c.namesrc
-                    alt
-                  />
+                  <img class="image" :src="c.namesrc" alt />
                 </span>
                 <div class="mess">
                   <h2>{{c.name}}</h2>
@@ -87,73 +99,107 @@
                     </a>
                     <em>赞</em>
                   </span>
-                </p> -->
+                </p>-->
               </div>
-              
             </section>
           </section>
         </section>
       </section>
     </section>
-    <section id="comment_count" v-if='!isshow'>
-      没有评论
-    </section>
-    <!-- <aside id="community_btn">
+    <section id="comment_count" v-show="!isshow">没有评论</section>
+    <aside id="community_btn">
       <div class="community_con">
         <div class="btn_mess">
-          <a class="icon-mess">
+          <!-- <a class="icon-mess">
             <i class="el-icon-chat-dot-round"></i>
-          </a>
+          </a>-->
           <em>
-            <router-link :to="'/discuss/'+module.title">评论</router-link>
+            <router-link :to="'/discuss/'+module.name">评论</router-link>
           </em>
         </div>
         <em class="border_r"></em>
-        <div id="btn_love_con">
+        <div id="btn_love_con" @click="buycort">
           <span class="loveBtn">
             <a class="loveIcon">
               <i class="el-icon-thumb"></i>
             </a>
-            <em>赞</em>
+            <em>立即购买</em>
           </span>
         </div>
       </div>
-    </aside> -->
+    </aside>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 export default {
-  // name: "Card",
-  // components: {},
   data() {
     return {
       module: "",
-      comment:'',
-      isshow:true,
+      comment: "",
+      isshow: true,
+      username: ""
     };
   },
   methods: {
     goback() {
       this.$router.go(-1); //返回上一层
+    },
+    buycort() {
+      axios
+        .get(`/isLogin`)
+        .then(res => {
+          console.log(res);
+          if (res.data.isLogin == false) {
+            this.$router.push({
+              path: `/login`
+            });
+          } else {
+            this.username = res.data.username;
+            axios
+              .get(`/starshop?id=${this.$route.params.id}`)
+              .then(res => {
+                console.log(res);
+                axios
+                  .get(
+                    `/addbuy?name=${res.data.titles[0].name}&shopuser=${res.data.titles[0].shopuser}&shopimg=${res.data.titles[0].shopimg}&price=${res.data.titles[0].price}&userimg=${res.data.titles[0].userimg}&username=${this.username}`
+                  )
+                  .then(res => {
+                    console.log(res);
+                    this.$router.push({
+                      path: `/buy`
+                    });
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  });
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        });
     }
   },
   mounted() {
     console.log(this.$route.params.id);
     axios
-      .get(`/module?id=${this.$route.params.id}`)
+      .get(`/starshop?id=${this.$route.params.id}`)
       .then(res => {
         console.log(res);
         this.module = res.data.titles[0];
         axios
-          .get(`/cardcomment?title=${this.module.title}`)
+          .get(`/cardcomment?title=${this.module.name}`)
           .then(res => {
             console.log(res);
-            if(res.data.titles==''){
-              this.isshow=false
-            }else{
-            this.comment = res.data.titles;
+            if (res.data.titles == "") {
+              this.isshow = false;
+            } else {
+              this.comment = res.data.titles;
             }
           })
           .catch(error => {
@@ -171,6 +217,25 @@ export default {
 /* body{
     background: #f8f8f8;
 } */
+#shopdetail {
+  padding: 0.32rem 0 0.48rem;
+  font-size: 0.3rem;
+  line-height: 0.45rem;
+  text-align: justify;
+  overflow: hidden;
+}
+.panel {
+  background: #fff;
+  padding: 0rem 0.3rem;
+  display: block;
+}
+.comment_dec {
+  font-size: 0.3rem;
+  line-height: 0.45rem;
+  text-align: justify;
+  margin: 0.12rem 0;
+  display: block;
+}
 .card {
   background: #f8f8f8;
   margin: 0;
@@ -322,7 +387,9 @@ export default {
 }
 .clearfix > span {
   margin: 0 24px 0 0;
+  font-size: 16px;
   display: inline-block;
+  color: #ff4773;
 }
 
 em > a {

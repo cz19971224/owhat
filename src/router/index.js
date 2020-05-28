@@ -12,6 +12,9 @@ import Card from '../components/Card'
 import Exit from '../pages/Exit'
 import Discuss from '../components/Discuss'
 import Source from '../components/Source'
+import Starshop from '../components/Starshop'
+import Shoplist from '../components/Shoplist'
+import buy from '../pages/buy'
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -63,6 +66,14 @@ export default new VueRouter({
         {
             path:'/source',
             component:Source
-        }
+        },
+        {
+            path:'/Starshop/:id',
+            component:Starshop
+        },
+        {
+            path:'/buy',
+            component:buy
+        },
     ]
 })

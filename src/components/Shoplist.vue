@@ -1,23 +1,9 @@
 <template>
-  <div class="shop">
-    <div class="block">
-      <span class="demonstration"></span>
-      <el-carousel height="150px">
-        <el-carousel-item>
-          <img class="shopimg" src="https://qimage.owhat.cn/prod/yunying/banner/1573212519095.jpg" alt />
-        </el-carousel-item>
-        <el-carousel-item>
-          <img class="shopimg" src="https://qimage.owhat.cn/prod/yunying/banner/1572874848679.jpg" alt />
-        </el-carousel-item>
-        <el-carousel-item>
-          <img class="shopimg" src="https://qimage.owhat.cn/prod/yunying/banner/1571963878559.jpeg" alt />
-        </el-carousel-item>
-      </el-carousel>
-    </div>
+  <div class="shoplist">
     <section class="dataContent">
       <section class="shopContent">
         <section class="shop_list">
-          <section class="goods_group" v-for="a in shop" :key="a.name">
+          <section class="goods_group" v-for="a in shop" :key="a.id">
             <router-link :to="'/Starshop/'+a.name">
               <section class="goodslink">
                 <section class="goods_img">
@@ -68,15 +54,17 @@
 <script>
 import axios from "axios";
 export default {
-  // name: "Shop",
   data() {
     return {
-      shop: ""
+      shop: "",
+      name:''
     };
   },
+  props:['starname'],
   mounted() {
+    // console.log(this.starname,11111111111111)
     axios
-      .get(`/allshop`)
+      .get(`/shoplist?id=${this.starname}`)
       .then(res => {
         console.log(res);
         this.shop = res.data.titles;
@@ -93,27 +81,6 @@ export default {
   padding: 0;
   margin: 0;
   border: 0;
-}
-.el-carousel__item h3 {
-  color: #475669;
-  font-size: 14px;
-  opacity: 0.75;
-  line-height: 150px;
-  margin: 0;
-}
-
-.el-carousel__item:nth-child(2n) {
-  background-color: #99a9bf;
-}
-
-.el-carousel__item:nth-child(2n + 1) {
-  background-color: #d3dce6;
-}
-.shopimg {
-  width: 100%;
-  height: 100%;
-  vertical-align: top;
-  display: block;
 }
 .shopContent {
   padding: 0.32rem 0.32rem 1rem 0.32rem;

@@ -30,26 +30,29 @@
             </section>
           </section>
         </section>
-        <section class="master_work_tab">
-          <section class="master_tab_rela">
-            <section class="master_tab">
-              <section class="panel-header">
-                <div class="white_bg"></div>
-                <div id="menu-swiper">
-                  <div class="swiper-wrapper">
-                    <div class="moving">
-                      <div class="line"></div>
-                      <div class="dot"></div>
-                    </div>
-                    <div class="swiper-slide">安利墙</div>
-                    <div class="swiper-slide">活动社</div>
-                    <div class="swiper-slide">商品</div>
-                    <div class="swiper-slide">关于TA</div>
-                  </div>
-                </div>
-              </section>
-            </section>
-          </section>
+
+        <section class="tabContent">
+          <p class="ptab">
+            <!-- <img src="" alt=""> -->
+            <span>
+              <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;" @click='shop(1)'>内容</font>
+              </font>
+            </span>
+          </p>
+          <!-- <div class="line"></div> -->
+          <!-- <em class="border_r"></em> -->
+          <p class="ptab">
+            <!-- <img src="" alt=""> -->
+            <span>
+              <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;" @click='shop(2)'>商品</font>
+              </font>
+            </span>
+          </p>
+        </section>
+
+        <section class="master_work_tab" v-if="isshop==1">
           <section id="work">
             <section class="anlist-con">
               <div class="each_work" v-for="c in comment">
@@ -93,33 +96,29 @@
                       <router-link :to="'/discuss/'+c.title">评论</router-link>
                     </span>
                   </p>
-                  <em class="border_r"></em>
-                  <p class="btn_love">
-                    <span class="loveBtn">
-                      <a class="loveIcon">
-                        <i class="el-icon-thumb"></i>
-                      </a>
-                      <em>赞</em>
-                    </span>
-                  </p>
                 </div>
               </div>
             </section>
           </section>
         </section>
+
+        <Shoplist v-if="isshop==2" :starname='star.name'></Shoplist>
+
       </section>
     </section>
-    <Starmodule @isshow="getisshow" @name="getdata" v-show="isshow"></Starmodule>
+    <Starmodule @isshow="getisshow" @name="getdata" v-show="isshow" @shopid='getisshop'></Starmodule>
   </div>
 </template>
 
 <script>
 import Starmodule from "./Starmodule";
+import Shoplist from './Shoplist'
 import axios from "axios";
 export default {
   name: "Star",
   components: {
-    Starmodule
+    Starmodule,
+    Shoplist
   },
   data() {
     return {
@@ -129,10 +128,21 @@ export default {
       // name:'',
       index: 1,
       name: "",
-      userid: ""
+      userid: "",
+      isshop:1,
+      red1:'',
+      red2:'red'
     };
   },
   methods: {
+    getisshop(data){
+      console.log(data)
+      this.isshop=data
+    },
+    shop(e){
+      // console.log(e)
+      this.isshop=e
+    },
     showhandle() {
       this.isshow = true;
     },
@@ -217,6 +227,29 @@ export default {
 </script>
 
 <style lang="" scoped>
+.red{
+  color: red;
+}
+.line {
+  height: 0.4rem;
+  margin-top: 0.3rem;
+  position: relative;
+}
+.ptab {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  color: #333;
+  width: 50%;
+  height: 1rem;
+  line-height: 1rem;
+  /* font-size: 0.28rem; */
+  font-weight: 700;
+  text-align: center;
+}
+
 .star {
   margin: 0;
   padding: 0;
@@ -728,5 +761,16 @@ export default {
 }
 .child > a {
   color: #8e8e93;
+}
+
+.tabContent {
+  width: 100%;
+  /* height: 1rem;
+   */
+  height: 50px;
+  background: #fff;
+  display: -webkit-box;
+  box-sizing: border-box;
+  position: relative;
 }
 </style>

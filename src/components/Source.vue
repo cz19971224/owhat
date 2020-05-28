@@ -19,6 +19,18 @@
         </div>
       </section>
 
+      <section id="mainpage" v-show="issearch">
+        <section id="notLogin">
+          <div class="searchError">
+            <span>
+              <img src="https://m.owhat.cn/src/images/img_omei_obsessed@2x.png" alt />
+            </span>
+            <p class="info">搜索不到</p>
+          </div>
+        </section>
+        <div class="clear"></div>
+      </section>
+
       <section class="container" v-show="search!=''">
         <section class="list_header">搜索</section>
         <section class="prt">
@@ -35,7 +47,7 @@
                 <p>粉丝：{{s.fans}}+</p>
               </div>
               <span class="btn">
-                <a class="focus red" @click="changehandle(a.name)">关注</a>
+                <a class="focus red" @click="changehandle(s.name)">关注</a>
               </span>
             </li>
           </ul>
@@ -65,7 +77,7 @@
         </section>
       </section>
 
-      <section class="container" v-show="len=allstar.length">
+      <!-- <section class="container" v-show="len=allstar.length">
         <section class="list_header">全部</section>
         <section class="prt">
           <ul id="list">
@@ -86,7 +98,7 @@
             </li>
           </ul>
         </section>
-      </section>
+      </section>-->
     </section>
   </div>
 </template>
@@ -109,7 +121,8 @@ export default {
       name: "",
       value: "",
       search: "",
-      len:''
+      len: "",
+      issearch: false
     };
   },
   methods: {
@@ -121,6 +134,17 @@ export default {
           console.log(res);
           if (res.data.titles != "") {
             this.search = res.data.titles;
+            this.value = "";
+            this.$router.push({ path: "/source" });
+            this.issearch = false;
+          }
+          if (res.data.titles == "") {
+            this.issearch = true;
+            this.arr = "";
+            // this.$message({
+            //   message:'搜索不到',
+            //   type: "warning"
+            // });
           }
         })
         .catch(error => {
@@ -133,6 +157,7 @@ export default {
     change(e) {
       this.islike = false;
       this.name != e;
+      this.search = "";
       axios
         .get(`/isLogin`)
         .then(res => {
@@ -151,23 +176,23 @@ export default {
                   if (res.data.titles != "") {
                     // this.star = res.data.titles;
                     // for (var i = 0; i < this.star.length; i++) {
-                      //  this.index++
-                      //  const num=this.index-1
-                      //  console.log(num)
-                      //  console.log(i)
-                      axios
-                        .get(`/unlove?name=${e}`)
-                        .then(res => {
-                          console.log(res);
-                          console.log(this.arr);
-                          this.arr =res.data.titles;
-                          // this.arr = this.arr.concat(res.data.titles);
-                          // this.index = i;
-                          console.log(this.arr);
-                        })
-                        .catch(error => {
-                          console.log(error);
-                        });
+                    //  this.index++
+                    //  const num=this.index-1
+                    //  console.log(num)
+                    //  console.log(i)
+                    axios
+                      .get(`/unlove?name=${e}`)
+                      .then(res => {
+                        console.log(res);
+                        console.log(this.arr);
+                        this.arr = res.data.titles;
+                        // this.arr = this.arr.concat(res.data.titles);
+                        // this.index = i;
+                        console.log(this.arr);
+                      })
+                      .catch(error => {
+                        console.log(error);
+                      });
                     // }
                   }
                   if (res.data.titles == "") {
@@ -178,6 +203,7 @@ export default {
                   console.log(error);
                 });
             })
+
             .catch(error => {
               console.log(error);
             });
@@ -185,52 +211,73 @@ export default {
         .catch(error => {
           console.log(error);
         });
-
-      //   axios
-      //     .get(`/lovestar?userid=${this.userid}`)
-      //     .then(res => {
-      //       console.log(res);
-      //       if (res.data.titles != "") {
-      //         this.star = res.data.titles;
-      //         for (var i = 0; i < this.star.length; i++) {
-      //           //  this.index++
-      //           //  const num=this.index-1
-      //           //  console.log(num)
-      //           //  console.log(i)
-      //           axios
-      //             .get(`/star?name=${res.data.titles[i].name}`)
-      //             .then(res => {
-      //               console.log(res);
-      //               this.arr = this.arr.concat(res.data.titles);
-      //               // this.index = i;
-      //               console.log(this.arr);
-      //             })
-      //             .catch(error => {
-      //               console.log(error);
-      //             });
-      //         }
-      //       }
-      //       if(res.data.titles==''){
-      //         this.arr=''
-      //       }
-      //     })
-      //     .catch(error => {
-      //       console.log(error);
-      //     });
-      // })
-      // .catch(error => {
-      //   console.log(error);
-      // });
+      this.$router.push({ path: "/source" });
     },
     changehandle(e) {
       this.islike = true;
       // this.att = "已关注";
       this.name = e;
+      this.search = "";
       axios
         .get(`/isLogin`)
         .then(res => {
           console.log(res);
           this.userid = res.data.username;
+
+          // axios
+          //   .get(`/islove?name=${e}`)
+          //   .then(res => {
+          //     console.log(res);
+          //     if (res.data.titles == "") {
+          //       axios
+          //         .get(`/addlove?name=${e}&userid=${this.userid}`)
+          //         .then(res => {
+          //           console.log(res);
+          //           // this.unlove = res.data.titles;
+
+          //           axios
+          //             .get(`/lovestar?userid=${this.userid}`)
+          //             .then(res => {
+          //               console.log(res);
+          //               this.star = res.data.titles;
+          //               console.log(this.star.length);
+          //               // for (var i = 0; i < this.star.length; i++) {
+          //               //  this.index++
+          //               //  const num=this.index-1
+          //               //  console.log(num)
+          //               //  console.log(i)
+          //               axios
+          //                 .get(`/star?name=${e}`)
+          //                 .then(res => {
+          //                   console.log(res);
+          //                   // this.arr=res.data.titles
+          //                   this.arr = this.arr.concat(res.data.titles);
+          //                   // this.index = i;
+          //                   // console.log(this.arr)
+          //                 })
+          //                 .catch(error => {
+          //                   console.log(error);
+          //                 });
+          //               // }
+          //             })
+          //             .catch(error => {
+          //               console.log(error);
+          //             });
+          //         })
+          //         .catch(error => {
+          //           console.log(error);
+          //         });
+          //     }
+          //     if(res.data.titles!=''){
+          //       this.$message({
+          //     message:'已关注',
+          //     type: "warning"
+          //   });
+          //     }
+          //   })
+          //   .catch(error => {
+          //     console.log(error);
+          //   });
 
           axios
             .get(`/addlove?name=${e}&userid=${this.userid}`)
@@ -243,24 +290,24 @@ export default {
                 .then(res => {
                   console.log(res);
                   this.star = res.data.titles;
-                  console.log(this.star.length)
+                  console.log(this.star.length);
                   // for (var i = 0; i < this.star.length; i++) {
-                    //  this.index++
-                    //  const num=this.index-1
-                    //  console.log(num)
-                    //  console.log(i)
-                    axios
-                      .get(`/star?name=${e}`)
-                      .then(res => {
-                        console.log(res);
-                        // this.arr=res.data.titles
-                        this.arr = this.arr.concat(res.data.titles);
-                        // this.index = i;
-                        // console.log(this.arr)
-                      })
-                      .catch(error => {
-                        console.log(error);
-                      });
+                  //  this.index++
+                  //  const num=this.index-1
+                  //  console.log(num)
+                  //  console.log(i)
+                  axios
+                    .get(`/star?name=${e}`)
+                    .then(res => {
+                      console.log(res);
+                      // this.arr=res.data.titles
+                      this.arr = this.arr.concat(res.data.titles);
+                      // this.index = i;
+                      // console.log(this.arr)
+                    })
+                    .catch(error => {
+                      console.log(error);
+                    });
                   // }
                 })
                 .catch(error => {
@@ -274,6 +321,8 @@ export default {
         .catch(error => {
           console.log(error);
         });
+
+      this.$router.push({ path: "/source" });
     }
   },
   mounted() {
@@ -288,8 +337,8 @@ export default {
           .then(res => {
             console.log(res);
             this.star = res.data.titles;
-            this.len=res.data.titles.length
-            console.log(this.len)
+            this.len = res.data.titles.length;
+            console.log(this.len);
             for (var i = 0; i < this.star.length; i++) {
               //  this.index++
               //  const num=this.index-1
@@ -536,4 +585,77 @@ export default {
 .red {
   background-color: #ff4773 !important;
 }
+
+#mainpage {
+  display: block;
+  margin: 0;
+  padding: 0;
+  /* height: 100%;
+  width: 100%; */
+}
+.clear {
+  clear: both;
+}
+#notLogin {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: #fff;
+  /* z-index: 1004; */
+}
+.searchError {
+  color: #8e8e93;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  position: absolute;
+  top: 25%;
+  margin: 0;
+  padding: 0;
+}
+.searchError > span {
+  display: inline-block;
+  width: 140px;
+  height: auto;
+}
+.searchError > span > img {
+  width: 100%;
+  vertical-align: top;
+  display: block;
+}
+.info {
+  margin: 21px 0 0 0;
+  padding: 0 15px;
+  font-size: 14px;
+  text-align: center;
+  color: #8e8e8e;
+}
+.info > span {
+  width: 100%;
+  font-size: 14px;
+  margin: 6px 0 0 0;
+  display: block;
+  text-align: center;
+  color: #8e8e93;
+}
+/* .button {
+  display: inline-block;
+  line-height: 41px;
+  font-weight: 600;
+  width: 183px;
+  height: 41px;
+  font-size: 20px;
+  margin: 24px 0 0 0;
+  padding: 0;
+  border: 1px rgba(255, 88, 104, 0.48) solid !important;
+  color: #ff4773 !important;
+  border-radius: 20px;
+  outline: none;
+  text-decoration: none;
+} */
+/* .red {
+  color: #ff4773 !important;
+} */
 </style>

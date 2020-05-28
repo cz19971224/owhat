@@ -12,9 +12,9 @@
             <i class="el-icon-goods"></i>
             <cite>商品</cite>
           </router-link>
-          <router-link class="js-publish" to="/amway">
+          <!-- <router-link class="js-publish" to="/amway">
            <i class="el-icon-circle-plus-outline"></i>
-          </router-link>
+          </router-link> -->
           <router-link to="/attention">
             <i class="el-icon-star-off"></i>
             <cite>关注</cite>
@@ -38,7 +38,7 @@ export default {
       isShow:true
     }
   },
-  components: {},
+  // components: {},
   watch: {
     $route:function(newValue,oldValue){
       console.log(newValue)

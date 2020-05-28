@@ -2,8 +2,8 @@
   <div class="my">
     <nav id="nav">
       <section>
-        <router-link to='/exit' class="right">
-        <i class="el-icon-setting"></i>
+        <router-link to="/exit" class="right">
+          <i class="el-icon-setting"></i>
         </router-link>
       </section>
     </nav>
@@ -21,7 +21,7 @@
           <i class="el-icon-arrow-right"></i>
         </span>
       </div>
-       <div class="mine_top" v-show="isLogin==true">
+      <div class="mine_top" v-show="isLogin==true">
         <span class="img120">
           <img :src="usersrc" alt />
         </span>
@@ -35,12 +35,23 @@
         </span>
       </div>
       <div class="module_enter">
-        <a class="js-goshopcart">
-          <span class="module_img">
-            <img src="https://m.owhat.cn/src/images/icon_mine_shoppingcart@2x.png" alt />
-          </span>
-          <p>购物车</p>
-        </a>
+         <router-link to="/login" v-if="isLogin==''">
+          <a class="js-goshopcart">
+            <span class="module_img">
+              <img src="https://m.owhat.cn/src/images/icon_mine_shoppingcart@2x.png" alt />
+            </span>
+            <p>购物车</p>
+          </a>
+        </router-link>
+        <router-link to="/buy" v-if="isLogin==true">
+          <a class="js-goshopcart">
+            <span class="module_img">
+              <img src="https://m.owhat.cn/src/images/icon_mine_shoppingcart@2x.png" alt />
+            </span>
+            <p>购物车</p>
+          </a>
+        </router-link>
+
         <a class="js-goshopcart">
           <span class="module_img">
             <img src="https://m.owhat.cn/src/images/icon_mine_order@2x.png" alt />
@@ -117,8 +128,8 @@ export default {
     return {
       isLogin: "",
       username: "",
-      user:'',
-      usersrc:''
+      user: "",
+      usersrc: ""
     };
   },
   methods: {},
@@ -130,17 +141,17 @@ export default {
         this.username = res.data.username;
         this.isLogin = res.data.isLogin;
         console.log(this.username);
-        if(this.isLogin==true){
-        axios
-          .get(`/allusers?username=${this.username}`)
-          .then(res => {
-            console.log(res);
-            this.user=res.data.titles[0]
-            this.usersrc=res.data.titles[0].usersrc
-          })
-          .catch(error => {
-            console.log(error);
-          });
+        if (this.isLogin == true) {
+          axios
+            .get(`/allusers?username=${this.username}`)
+            .then(res => {
+              console.log(res);
+              this.user = res.data.titles[0];
+              this.usersrc = res.data.titles[0].usersrc;
+            })
+            .catch(error => {
+              console.log(error);
+            });
         }
       })
       .catch(error => {
